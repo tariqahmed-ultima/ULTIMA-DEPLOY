@@ -429,7 +429,7 @@
              "#!/bin/bash -xe\n",
              "yum update -y aws-cfn-bootstrap\n",
              "yum install -y git\n",
-             "git clone https://github.com/arehmandev/polymerjs-shopexample /home/ec2-user/app\n",
+             "git clone https://github.com/tariqahmed-ultima/ultima-shop-demo /home/ec2-user/app\n",
              "cd /home/ec2-user/app && bash VMbootstrap.sh\n",
              "/opt/aws/bin/cfn-init -v ",
              "         --stack ", { "Ref" : "AWS::StackName" },

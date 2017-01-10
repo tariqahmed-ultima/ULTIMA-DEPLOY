@@ -383,7 +383,7 @@
     "PublicLoadBalancerSecurityGroup" : {
       "Type" : "AWS::EC2::SecurityGroup",
       "Properties" : {
-        "GroupDescription" : "Enable HTTP/HTTPS access on port 80/443 ",
+        "GroupDescription" : "Enable HTTP/HTTPS access on port 80/443 to 80/8080",
         "VpcId" : { "Ref" : "VPC" },
         "SecurityGroupIngress" : [ {
           "IpProtocol" : "tcp",
@@ -403,7 +403,12 @@
           "ToPort" : "80",
           "CidrIp" : "0.0.0.0/0"
         },
-        ]
+        {
+          "IpProtocol" : "tcp",
+          "FromPort" : "8080",
+          "ToPort" : "8080",
+          "CidrIp" : "0.0.0.0/0"
+        } ]
       }
     },
 
@@ -482,8 +487,8 @@
              "#!/bin/bash -xe\n",
              "yum update -y aws-cfn-bootstrap\n",
              "yum install -y git\n",
-             "yum install -y httpd\n",
-             "git clone -b ", { "Ref" : "Gitbranch" }, " https://github.com/tariqahmed-ultima/ultima-demo /var/www/html\n",
+             "git clone -b ", { "Ref" : "Gitbranch" }, " https://github.com/tariqahmed-ultima/ultima-shop-demo /home/ec2-user/app\n",
+             "cd /home/ec2-user/app && bash VMbootstrap.sh\n",
              "/opt/aws/bin/cfn-init -v ",
              "         --stack ", { "Ref" : "AWS::StackName" },
              "         --resource WebServerInstance ",
@@ -493,9 +498,10 @@
              "         --stack ", { "Ref" : "AWS::StackName" },
              "         --resource WebServerInstance ",
              "         --region ", { "Ref" : "AWS::Region" }, "\n",
-             "service httpd start\n",
-             "chkconfig httpd on\n"
-]]}}
+
+             "cd /home/ec2-user/app/shop\n",
+             "polymer serve --hostname 0.0.0.0 --port 80\n"
+        ]]}}
       },
       "CreationPolicy" : {
         "ResourceSignal" : {
@@ -578,8 +584,8 @@
              "#!/bin/bash -xe\n",
              "yum update -y aws-cfn-bootstrap\n",
              "yum install -y git\n",
-             "yum install -y httpd\n",
-             "git clone -b ", { "Ref" : "Gitbranch" }, " https://github.com/tariqahmed-ultima/ultima-deploy /var/www/html\n",
+             "git clone -b ", { "Ref" : "Gitbranch2" }, " https://github.com/tariqahmed-ultima/ultima-shop-demo /home/ec2-user/app\n",
+             "cd /home/ec2-user/app && bash VMbootstrap.sh\n",
              "/opt/aws/bin/cfn-init -v ",
              "         --stack ", { "Ref" : "AWS::StackName" },
              "         --resource WebServerInstance2 ",
@@ -589,9 +595,10 @@
              "         --stack ", { "Ref" : "AWS::StackName" },
              "         --resource WebServerInstance2 ",
              "         --region ", { "Ref" : "AWS::Region" }, "\n",
-             "service httpd start\n",
-             "chkconfig httpd on\n"
-]]}}
+
+             "cd /home/ec2-user/app/shop\n",
+             "polymer serve --hostname 0.0.0.0 --port 80\n"
+        ]]}}
       },
       "CreationPolicy" : {
         "ResourceSignal" : {

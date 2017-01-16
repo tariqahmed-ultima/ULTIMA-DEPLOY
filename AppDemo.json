@@ -383,7 +383,7 @@
     "PublicLoadBalancerSecurityGroup" : {
       "Type" : "AWS::EC2::SecurityGroup",
       "Properties" : {
-        "GroupDescription" : "Enable HTTP/HTTPS access on port 80/443 ",
+        "GroupDescription" : "Enable HTTP/HTTPS access on port 80/443 to 80/8080",
         "VpcId" : { "Ref" : "VPC" },
         "SecurityGroupIngress" : [ {
           "IpProtocol" : "tcp",
@@ -579,7 +579,7 @@
              "yum update -y aws-cfn-bootstrap\n",
              "yum install -y git\n",
              "yum install -y httpd\n",
-             "git clone -b ", { "Ref" : "Gitbranch" }, " https://github.com/tariqahmed-ultima/ultima-deploy /var/www/html\n",
+             "git clone -b ", { "Ref" : "Gitbranch" }, " https://github.com/tariqahmed-ultima/ultima-demo /var/www/html\n",
              "/opt/aws/bin/cfn-init -v ",
              "         --stack ", { "Ref" : "AWS::StackName" },
              "         --resource WebServerInstance2 ",
@@ -603,10 +603,10 @@
     "UltimaLB1": {
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
       "Properties": {
-         "HealthCheck": {
+           "HealthCheck": {
            "HealthyThreshold": "2",
            "Interval": "5",
-           "Target": "HTTP:80/",
+           "Target": "HTTP:80/index.html",
            "Timeout": "3",
            "UnhealthyThreshold": "2"
          },
@@ -623,15 +623,29 @@
            { "Ref": "WebServerInstance" },
            { "Ref": "WebServerInstance2" }
          ],
+
          "Tags": [ { "Key": "resclass", "Value": "vcts-lab-elb" } ]
       }
-    }
+    },
 
-
+"UltimaDNS" : {
+        "Type" : "AWS::Route53::RecordSetGroup",
+        "Properties" : {
+          "HostedZoneName" : "ultima-devops.com.",
+          "Comment" : "Zone apex alias targeted to  UltimaLB1 LoadBalancer.",
+          "RecordSets" : [
+            {
+              "Name" : "development.ultima-devops.com.",
+              "Type" : "A",
+              "AliasTarget" : {
+                  "HostedZoneId" : { "Fn::GetAtt" : ["UltimaLB1", "CanonicalHostedZoneNameID"] },
+                  "DNSName" : { "Fn::GetAtt" : ["UltimaLB1","DNSName"] }
+              }
+            }
+          ]
+        }
+      }
 },
-
-
-
 
   "Outputs" : {
     "WebURL" : {

@@ -1,0 +1,16 @@
+{
+  "Comment": "string",
+  "Changes": [
+    {
+      "Action": "UPSERT",
+      "ResourceRecordSet": {
+        "Name": "ultima-devops.com.",
+        "Type": "A",
+        "SetIdentifier": "development.ultima-devops.com",
+        "Region": "us-west-1",
+        "ResourceRecords": [
+          {
+            "Value": "test.ultima-devops.com"
+          }
+        ],
+      }

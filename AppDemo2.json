@@ -33,7 +33,7 @@
     "KeyName": {
       "Description" : "Name of an existing EC2 KeyPair to enable SSH access to the instance",
       "Type": "AWS::EC2::KeyPair::KeyName",
-      "Default" : "ultimate-demo",
+      "Default" : "demokey",
       "ConstraintDescription" : "must be the name of an existing EC2 KeyPair."
     },
 
@@ -473,7 +473,7 @@
             {
                 "Key" : "Application",
                 "Value" : { "Ref" : "AWS::StackId" }
-            },
+            }
        ],
         "NetworkInterfaces" : [{
           "GroupSet"                 : [{ "Ref" : "InstanceSecurityGroup" }],
@@ -570,7 +570,7 @@
             {
                 "Key" : "Application",
                 "Value" : { "Ref" : "AWS::StackId" }
-            },
+            }
        ],
         "NetworkInterfaces" : [{
           "GroupSet"                 : [{ "Ref" : "InstanceSecurityGroup" }],
@@ -653,5 +653,5 @@
       "Description": "DNS host for the ELB",
       "Value": { "Fn::GetAtt": [ "UltimaLB1", "DNSName" ] }
     }
-  },
+  }
 }

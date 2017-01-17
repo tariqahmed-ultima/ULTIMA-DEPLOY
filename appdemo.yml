@@ -838,6 +838,9 @@ Resources:
         Timeout: PT15M
   UltimaLB1:
     Type: 'AWS::ElasticLoadBalancing::LoadBalancer'
+    DependsOn:
+      - WebServerInstance2
+      - WebServerInstance
     Properties:
       HealthCheck:
         HealthyThreshold: '2'
@@ -863,11 +866,12 @@ Resources:
           Value: vcts-lab-elb
   UltimaDNS:
     Type: 'AWS::Route53::RecordSetGroup'
+    DependsOn: UltimaLB1
     Properties:
       HostedZoneName: ultima-devops.com.
       Comment: Zone apex alias targeted to  UltimaLB1 LoadBalancer.
       RecordSets:
-        - Name: environment.ultima-devops.com.
+        - Name: development.ultima-devops.com.
           Type: A
           AliasTarget:
             HostedZoneId:
@@ -878,20 +882,6 @@ Resources:
               'Fn::GetAtt':
                 - UltimaLB1
                 - DNSName
-  UltimaDNS2:
-    Type: 'AWS::Route53::RecordSetGroup'
-    Properties:
-      HostedZoneName: ultima-devops.com.
-      Comment: Zone apex alias targeted to  UltimaLB1 LoadBalancer.
-      RecordSets:
-        - Name: development.ultima-devops.com.
-          Type: CNAME
-          AliasTarget:
-            HostedZoneId:
-              'Fn::GetAtt':
-                - UltimaLB1
-                - CanonicalHostedZoneNameID
-            DNSName: environment.ultima-devops.com.
 Outputs:
   WebURL:
     Value:

@@ -603,6 +603,7 @@
 
     "UltimaLB1": {
       "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "DependsOn" : ["WebServerInstance2", "WebServerInstance"],
       "Properties": {
            "HealthCheck": {
            "HealthyThreshold": "2",
@@ -631,6 +632,7 @@
 
 "UltimaDNS" : {
         "Type" : "AWS::Route53::RecordSetGroup",
+        "DependsOn" : "UltimaLB1",
         "Properties" : {
           "HostedZoneName" :  "ultima-devops.com.",
           "Comment" : "Zone apex alias targeted to  UltimaLB1 LoadBalancer.",

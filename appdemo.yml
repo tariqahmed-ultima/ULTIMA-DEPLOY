@@ -358,6 +358,13 @@ Resources:
         - Key: Application
           Value:
             Ref: 'AWS::StackId'
+
+  InstanceProfile:
+            Type: "AWS::IAM::InstanceProfile"
+            Properties:
+              Path: "/"
+              Roles:
+                - "CodeDeploy-UltimaDemo"
   Subnet:
     Type: 'AWS::EC2::Subnet'
     Properties:
@@ -544,6 +551,7 @@ Resources:
           FromPort: '80'
           ToPort: '80'
           CidrIp: 0.0.0.0/0
+
   WebServerInstance:
     Type: 'AWS::EC2::Instance'
     DependsOn: AttachGateway
@@ -619,6 +627,8 @@ Resources:
         - Key: Application
           Value:
             Ref: 'AWS::StackId'
+      IamInstanceProfile:
+          Ref: InstanceProfile
       NetworkInterfaces:
         - GroupSet:
             - Ref: InstanceSecurityGroup
@@ -742,6 +752,8 @@ Resources:
         - Key: Application
           Value:
             Ref: 'AWS::StackId'
+      IamInstanceProfile:
+        Ref: InstanceProfile
       NetworkInterfaces:
         - GroupSet:
             - Ref: InstanceSecurityGroup

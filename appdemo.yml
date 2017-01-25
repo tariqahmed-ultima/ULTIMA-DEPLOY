@@ -508,7 +508,14 @@ Resources:
         Ref: Subnet
       NetworkAclId:
         Ref: NetworkAcl
-  IPAddress:
+  IPAddress1:
+    Type: 'AWS::EC2::EIP'
+    DependsOn: AttachGateway
+    Properties:
+      Domain: vpc
+      InstanceId:
+        Ref: WebServerInstance
+  IPAddress2:
     Type: 'AWS::EC2::EIP'
     DependsOn: AttachGateway
     Properties:
@@ -850,6 +857,7 @@ Resources:
             - DNSName
   DNSNameweb:
    Type: 'AWS::Route53::RecordSetGroup'
+   DependsOn: IPAddress1
    Properties:
      HostedZoneName: ultima-devops.com.
      Comment: A record.
@@ -863,6 +871,7 @@ Resources:
              - PublicIp
   DNSNameweb2:
    Type: 'AWS::Route53::RecordSetGroup'
+   DependsOn: IPAddress2
    Properties:
      HostedZoneName: ultima-devops.com.
      Comment: A record.

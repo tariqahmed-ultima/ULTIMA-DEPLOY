@@ -10,12 +10,13 @@ Parameters:
   Gitbranch:
     Description: Github branch for webserver1 - by default this is test
     Type: String
-    Default: test
+    Default: staging
     AllowedValues:
       - production
       - development
       - test
       - staging
+
 
 Resources:
 

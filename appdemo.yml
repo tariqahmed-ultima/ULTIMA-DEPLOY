@@ -844,7 +844,7 @@ Resources:
       HostedZoneName: ultima-devops.com.
       Comment: Zone apex alias targeted to  UltimaLB1 LoadBalancer.
       RecordSets:
-      - Name: development.ultima-devops.com.
+      - Name: environment.ultima-devops.com.
         Type: A
         AliasTarget:
           HostedZoneId:
@@ -888,23 +888,43 @@ Outputs:
     Value:
       'Fn::Join':
         - ''
-        - - 'http://'
+        - - ''
           - 'Fn::GetAtt':
               - WebServerInstance
               - PublicIp
+    Export:
+      Name:
+        'Fn::Sub': '${AWS::StackName}-WEB'
     Description: Newly created application URL
+
   WebURL2:
     Value:
       'Fn::Join':
         - ''
-        - - 'http://'
+        - - ''
           - 'Fn::GetAtt':
               - WebServerInstance2
               - PublicIp
+    Export:
+      Name:
+        'Fn::Sub': '${AWS::StackName}-WEB2'
     Description: Newly created application URL
+
   ELBDNSName:
     Description: DNS host for the ELB
     Value:
       'Fn::GetAtt':
         - UltimaLB1
         - DNSName
+    Export:
+      Name:
+        'Fn::Sub': '${AWS::StackName}-LB1'
+
+  HostedZoneId1:
+    Value:
+      'Fn::GetAtt':
+        - UltimaLB1
+        - CanonicalHostedZoneNameID
+    Export:
+      Name:
+        'Fn::Sub': '${AWS::StackName}-HostedZoneId1'

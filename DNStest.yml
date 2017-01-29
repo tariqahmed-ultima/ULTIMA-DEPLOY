@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: AWS CloudFormation demo with application
+
+Parameters:
+
+  StackName:
+    Type: String
+    Default: dev-ultima-demo
+    Description: Name of External Stack
+  Gitbranch:
+    Description: Github branch for webserver1 - by default this is master
+    Type: String
+    Default: test
+    AllowedValues:
+      - master
+      - development
+      - test
+      - staging
+
+Resources:
+
+
+  DNSNameweb:
+   Type: 'AWS::Route53::RecordSetGroup'
+   Properties:
+     HostedZoneName: ultima-devops.com.
+     Comment: A record.
+     RecordSets:
+        - Name: "web.ultima-devops.com"
+          Type: A
+          TTL: '900'
+          ResourceRecords:
+              - 'Fn::ImportValue':
+                  'Fn::Sub': "${StackName}-WEB"
+  DNSNameweb2:
+   Type: 'AWS::Route53::RecordSetGroup'
+   Properties:
+     HostedZoneName: ultima-devops.com.
+     Comment: A record.
+     RecordSets:
+     - Name: "web2.ultima-devops.com"
+       Type: A
+       TTL: '900'
+       ResourceRecords:
+           - 'Fn::ImportValue':
+               'Fn::Sub': "${StackName}-WEB2"
+
+
+
+  EnvironmentLB:
+   Type: 'AWS::Route53::RecordSetGroup'
+   Properties:
+     HostedZoneName: ultima-devops.com.
+     Comment: CNAME record.
+     RecordSets:
+        - Name:
+            'Fn::Join':
+              - ''
+              - - Ref: Gitbranch
+                - '.ultima-devops.com'
+
+          Type: CNAME
+          TTL: '900'
+          ResourceRecords:
+            - environment.ultima-devops.com
